@@ -76,7 +76,7 @@ func UpdatePlaylist(cmd *m.UpdatePlaylistCommand) error {
 		return err
 	}
 
-	rawSql := "DELETE FROM playlist_item WHERE playlist_id = ?"
+	rawSql := "DELETE FROM " + m.PlaylistItemTable + " WHERE playlist_id = ?"
 	_, err = x.Exec(rawSql, cmd.Id)
 
 	if err != nil {
@@ -119,14 +119,14 @@ func DeletePlaylist(cmd *m.DeletePlaylistCommand) error {
 	}
 
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawPlaylistSql = "DELETE FROM playlist WHERE id = ? and org_id = ?"
+		var rawPlaylistSql = "DELETE FROM " + m.PlaylistTable + " WHERE id = ? and org_id = ?"
 		_, err := sess.Exec(rawPlaylistSql, cmd.Id, cmd.OrgId)
 
 		if err != nil {
 			return err
 		}
 
-		var rawItemSql = "DELETE FROM playlist_item WHERE playlist_id = ?"
+		var rawItemSql = "DELETE FROM " + m.PlaylistItemTable + " WHERE playlist_id = ?"
 		_, err2 := sess.Exec(rawItemSql, cmd.Id)
 
 		return err2

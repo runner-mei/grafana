@@ -12,6 +12,12 @@ type SendEmailCommand struct {
 	Info     string
 }
 
+// const SendEmailCommandTable = "tpt_dh_send_email_command"
+
+// func (a *SendEmailCommand) TableName() string {
+// 	return SendEmailCommandTable
+// }
+
 type SendResetPasswordEmailCommand struct {
 	User *User
 }

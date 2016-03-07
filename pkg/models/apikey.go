@@ -17,6 +17,12 @@ type ApiKey struct {
 	Updated time.Time
 }
 
+const ApiKeyTable = "tpt_dh_api_key"
+
+func (a *ApiKey) TableName() string {
+	return ApiKeyTable
+}
+
 // ---------------------
 // COMMANDS
 type AddApiKeyCommand struct {

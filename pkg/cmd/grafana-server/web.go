@@ -1,14 +1,14 @@
 // Copyright 2014 Unknwon
 // Copyright 2014 Torkel Ödegaard
 
-package main
+package gf_server
 
 import (
 	"fmt"
 	"net/http"
 	"path"
 
-	"gopkg.in/macaron.v1"
+	macaron "gopkg.in/macaron.v1"
 
 	"github.com/grafana/grafana/pkg/api"
 	"github.com/grafana/grafana/pkg/api/static"
@@ -50,7 +50,6 @@ func newMacaron() *macaron.Macaron {
 
 	m.Use(middleware.GetContextHandler())
 	m.Use(middleware.Sessioner(&setting.SessionOptions))
-
 	return m
 }
 
@@ -76,7 +75,6 @@ func mapStatic(m *macaron.Macaron, rootDir string, dir string, prefix string) {
 }
 
 func StartServer() {
-
 	var err error
 	m := newMacaron()
 	api.Register(m)

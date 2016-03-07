@@ -8,3 +8,9 @@ type Address struct {
 	State    string `json:"state"`
 	Country  string `json:"country"`
 }
+
+const AddressTable = "tpt_dh_address"
+
+func (a *Address) TableName() string {
+	return AddressTable
+}

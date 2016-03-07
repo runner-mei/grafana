@@ -20,6 +20,12 @@ type DashboardSnapshot struct {
 	Dashboard map[string]interface{}
 }
 
+const DashboardSnapshotTable = "tpt_dh_dashboard_snapshot"
+
+func (a *DashboardSnapshot) TableName() string {
+	return DashboardSnapshotTable
+}
+
 // DashboardSnapshotDTO without dashboard map
 type DashboardSnapshotDTO struct {
 	Id          int64  `json:"id"`

@@ -3,11 +3,11 @@ package migrations
 import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addPlaylistMigrations(mg *Migrator) {
-	mg.AddMigration("Drop old table playlist table", NewDropTableMigration("playlist"))
-	mg.AddMigration("Drop old table playlist_item table", NewDropTableMigration("playlist_item"))
+	mg.AddMigration("Drop old table playlist table", NewDropTableMigration("tpt_dh_playlist"))
+	mg.AddMigration("Drop old table playlist_item table", NewDropTableMigration("tpt_dh_playlist_item"))
 
 	playlistV2 := Table{
-		Name: "playlist",
+		Name: "tpt_dh_playlist",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "name", Type: DB_NVarchar, Length: 255, Nullable: false},
@@ -20,7 +20,7 @@ func addPlaylistMigrations(mg *Migrator) {
 	mg.AddMigration("create playlist table v2", NewAddTableMigration(playlistV2))
 
 	playlistItemV2 := Table{
-		Name: "playlist_item",
+		Name: "tpt_dh_playlist_item",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "playlist_id", Type: DB_BigInt, Nullable: false},

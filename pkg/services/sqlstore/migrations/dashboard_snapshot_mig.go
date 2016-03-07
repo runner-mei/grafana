@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addDashboardSnapshotMigrations(mg *Migrator) {
 	snapshotV4 := Table{
-		Name: "dashboard_snapshot",
+		Name: "tpt_dh_dashboard_snapshot",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "name", Type: DB_NVarchar, Length: 255, Nullable: false},
@@ -21,10 +21,10 @@ func addDashboardSnapshotMigrations(mg *Migrator) {
 
 	// add v4
 	mg.AddMigration("create dashboard_snapshot table v4", NewAddTableMigration(snapshotV4))
-	mg.AddMigration("drop table dashboard_snapshot_v4 #1", NewDropTableMigration("dashboard_snapshot"))
+	mg.AddMigration("drop table dashboard_snapshot_v4 #1", NewDropTableMigration("tpt_dh_dashboard_snapshot"))
 
 	snapshotV5 := Table{
-		Name: "dashboard_snapshot",
+		Name: "tpt_dh_dashboard_snapshot",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "name", Type: DB_NVarchar, Length: 255, Nullable: false},
@@ -53,5 +53,5 @@ func addDashboardSnapshotMigrations(mg *Migrator) {
 	mg.AddMigration("alter dashboard_snapshot to mediumtext v2", new(RawSqlMigration).
 		Sqlite("SELECT 0 WHERE 0;").
 		Postgres("SELECT 0;").
-		Mysql("ALTER TABLE dashboard_snapshot MODIFY dashboard MEDIUMTEXT;"))
+		Mysql("ALTER TABLE tpt_dh_dashboard_snapshot MODIFY dashboard MEDIUMTEXT;"))
 }

@@ -30,6 +30,12 @@ type User struct {
 	Updated time.Time
 }
 
+const UserTable = "tpt_dh_user"
+
+func (a *User) TableName() string {
+	return UserTable
+}
+
 func (u *User) NameOrFallback() string {
 	if u.Name != "" {
 		return u.Name
@@ -139,6 +145,12 @@ type SignedInUser struct {
 	Theme          string
 	ApiKeyId       int64
 	IsGrafanaAdmin bool
+}
+
+const SignedInUserTable = "tpt_dh_signed_in_user"
+
+func (a *SignedInUser) TableName() string {
+	return SignedInUserTable
 }
 
 type UserProfileDTO struct {

@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addDataSourceMigration(mg *Migrator) {
 	var tableV1 = Table{
-		Name: "data_source",
+		Name: "tpt_dh_data_source",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "account_id", Type: DB_BigInt, Nullable: false},
@@ -39,11 +39,11 @@ func addDataSourceMigration(mg *Migrator) {
 	// drop v1 indices
 	addDropAllIndicesMigrations(mg, "v1", tableV1)
 	// rename table
-	addTableRenameMigration(mg, "data_source", "data_source_v1", "v1")
+	addTableRenameMigration(mg, "tpt_dh_data_source", "tpt_dh_data_source_v1", "v1")
 
 	// new table
 	var tableV2 = Table{
-		Name: "data_source",
+		Name: "tpt_dh_data_source",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt, Nullable: false},
@@ -70,13 +70,13 @@ func addDataSourceMigration(mg *Migrator) {
 	}
 
 	// create v2 table
-	mg.AddMigration("create data_source table v2", NewAddTableMigration(tableV2))
+	mg.AddMigration("create tpt_dh_data_source table v2", NewAddTableMigration(tableV2))
 
 	// add v2 indíces
 	addTableIndicesMigrations(mg, "v2", tableV2)
 
 	//------- copy data from v1 to v2 -------------------
-	mg.AddMigration("copy data_source v1 to v2", NewCopyTableDataMigration("data_source", "data_source_v1", map[string]string{
+	mg.AddMigration("copy data_source v1 to v2", NewCopyTableDataMigration("tpt_dh_data_source", "tpt_dh_data_source_v1", map[string]string{
 		"id":                  "id",
 		"org_id":              "account_id",
 		"version":             "version",
@@ -95,7 +95,7 @@ func addDataSourceMigration(mg *Migrator) {
 		"updated":             "updated",
 	}))
 
-	mg.AddMigration("Drop old table data_source_v1 #2", NewDropTableMigration("data_source_v1"))
+	mg.AddMigration("Drop old table data_source_v1 #2", NewDropTableMigration("tpt_dh_data_source_v1"))
 
 	// add column to activate withCredentials option
 	mg.AddMigration("Add column with_credentials", NewAddColumnMigration(tableV2, &Column{

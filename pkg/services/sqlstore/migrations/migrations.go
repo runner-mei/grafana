@@ -26,7 +26,7 @@ func AddMigrations(mg *Migrator) {
 
 func addMigrationLogMigrations(mg *Migrator) {
 	migrationLogV1 := Table{
-		Name: "migration_log",
+		Name: "tpt_dh_migration_log",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "migration_id", Type: DB_NVarchar, Length: 255},
@@ -42,7 +42,7 @@ func addMigrationLogMigrations(mg *Migrator) {
 
 func addStarMigrations(mg *Migrator) {
 	starV1 := Table{
-		Name: "star",
+		Name: "tpt_dh_star",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "user_id", Type: DB_BigInt, Nullable: false},

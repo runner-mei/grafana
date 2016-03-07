@@ -20,7 +20,7 @@ func init() {
 func AddOrgUser(cmd *m.AddOrgUserCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
 		// check if user exists
-		if res, err := sess.Query("SELECT 1 from org_user WHERE org_id=? and user_id=?", cmd.OrgId, cmd.UserId); err != nil {
+		if res, err := sess.Query("SELECT 1 from "+m.OrgUserTable+" WHERE org_id=? and user_id=?", cmd.OrgId, cmd.UserId); err != nil {
 			return err
 		} else if len(res) == 1 {
 			return m.ErrOrgUserAlreadyAdded
@@ -64,11 +64,11 @@ func UpdateOrgUser(cmd *m.UpdateOrgUserCommand) error {
 
 func GetOrgUsers(query *m.GetOrgUsersQuery) error {
 	query.Result = make([]*m.OrgUserDTO, 0)
-	sess := x.Table("org_user")
-	sess.Join("INNER", "user", fmt.Sprintf("org_user.user_id=%s.id", x.Dialect().Quote("user")))
-	sess.Where("org_user.org_id=?", query.OrgId)
-	sess.Cols("org_user.org_id", "org_user.user_id", "user.email", "user.login", "org_user.role")
-	sess.Asc("user.email", "user.login")
+	sess := x.Table(m.OrgUserTable)
+	sess.Join("INNER", m.UserTable, fmt.Sprintf(m.OrgUserTable+".user_id=%s.id", x.Dialect().Quote(m.UserTable)))
+	sess.Where(m.OrgUserTable+".org_id=?", query.OrgId)
+	sess.Cols(m.OrgUserTable+".org_id", m.OrgUserTable+".user_id", m.UserTable+".email", m.UserTable+".login", m.OrgUserTable+".role")
+	sess.Asc(m.UserTable+".email", m.UserTable+".login")
 
 	err := sess.Find(&query.Result)
 	return err
@@ -76,7 +76,7 @@ func GetOrgUsers(query *m.GetOrgUsersQuery) error {
 
 func RemoveOrgUser(cmd *m.RemoveOrgUserCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "DELETE FROM org_user WHERE org_id=? and user_id=?"
+		var rawSql = "DELETE FROM " + m.OrgUserTable + " WHERE org_id=? and user_id=?"
 		_, err := sess.Exec(rawSql, cmd.OrgId, cmd.UserId)
 		if err != nil {
 			return err
@@ -88,7 +88,7 @@ func RemoveOrgUser(cmd *m.RemoveOrgUserCommand) error {
 
 func validateOneAdminLeftInOrg(orgId int64, sess *xorm.Session) error {
 	// validate that there is an admin user left
-	res, err := sess.Query("SELECT 1 from org_user WHERE org_id=? and role='Admin'", orgId)
+	res, err := sess.Query("SELECT 1 from "+m.OrgUserTable+" WHERE org_id=? and role='Admin'", orgId)
 	if err != nil {
 		return err
 	}

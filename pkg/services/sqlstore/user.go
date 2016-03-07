@@ -258,10 +258,10 @@ func GetUserProfile(query *m.GetUserProfileQuery) error {
 
 func GetUserOrgList(query *m.GetUserOrgListQuery) error {
 	query.Result = make([]*m.UserOrgDTO, 0)
-	sess := x.Table("org_user")
-	sess.Join("INNER", "org", "org_user.org_id=org.id")
-	sess.Where("org_user.user_id=?", query.UserId)
-	sess.Cols("org.name", "org_user.role", "org_user.org_id")
+	sess := x.Table(m.OrgUserTable)
+	sess.Join("INNER", m.OrgTable, m.OrgUserTable+".org_id="+m.OrgTable+".id")
+	sess.Where(m.OrgUserTable+".user_id=?", query.UserId)
+	sess.Cols(m.OrgTable+".name", m.OrgUserTable+".role", m.OrgUserTable+".org_id")
 	err := sess.Find(&query.Result)
 	return err
 }
@@ -277,11 +277,11 @@ func GetSignedInUser(query *m.GetSignedInUserQuery) error {
 	                org.name       as org_name,
 	                org_user.role  as org_role,
 	                org.id         as org_id
-	                FROM ` + dialect.Quote("user") + ` as u
-									LEFT OUTER JOIN org_user on org_user.org_id = u.org_id and org_user.user_id = u.id
-	                LEFT OUTER JOIN org on org.id = u.org_id `
+	                FROM ` + dialect.Quote(m.UserTable) + ` as u
+									LEFT OUTER JOIN ` + m.OrgUserTable + ` as org_user on org_user.org_id = u.org_id and org_user.user_id = u.id
+	                LEFT OUTER JOIN ` + m.OrgTable + ` as org on org.id = u.org_id `
 
-	sess := x.Table("user")
+	sess := x.Table(m.UserTable)
 	if query.UserId > 0 {
 		sess.Sql(rawSql+"WHERE u.id=?", query.UserId)
 	} else if query.Login != "" {
@@ -309,7 +309,7 @@ func GetSignedInUser(query *m.GetSignedInUserQuery) error {
 
 func SearchUsers(query *m.SearchUsersQuery) error {
 	query.Result = make([]*m.UserSearchHitDTO, 0)
-	sess := x.Table("user")
+	sess := x.Table(m.UserTable)
 	sess.Where("email LIKE ?", query.Query+"%")
 	sess.Limit(query.Limit, query.Limit*query.Page)
 	sess.Cols("id", "email", "name", "login", "is_admin")
@@ -320,8 +320,8 @@ func SearchUsers(query *m.SearchUsersQuery) error {
 func DeleteUser(cmd *m.DeleteUserCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
 		deletes := []string{
-			"DELETE FROM star WHERE user_id = ?",
-			"DELETE FROM " + dialect.Quote("user") + " WHERE id = ?",
+			"DELETE FROM " + m.StarTable + " WHERE user_id = ?",
+			"DELETE FROM " + dialect.Quote(m.UserTable) + " WHERE id = ?",
 		}
 
 		for _, sql := range deletes {

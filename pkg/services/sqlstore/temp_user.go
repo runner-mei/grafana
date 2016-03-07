@@ -17,7 +17,7 @@ func init() {
 
 func UpdateTempUserStatus(cmd *m.UpdateTempUserStatusCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "UPDATE temp_user SET status=? WHERE code=?"
+		var rawSql = "UPDATE " + m.TempUserTable + " SET status=? WHERE code=?"
 		_, err := sess.Exec(rawSql, string(cmd.Status), cmd.Code)
 		return err
 	})
@@ -64,8 +64,8 @@ func GetTempUsersQuery(query *m.GetTempUsersQuery) error {
 									u.login						as invited_by_login,
 									u.name						as invited_by_name,
 									u.email						as invited_by_email
-	                FROM ` + dialect.Quote("temp_user") + ` as tu
-									LEFT OUTER JOIN ` + dialect.Quote("user") + ` as u on u.id = tu.invited_by_user_id
+	                FROM ` + dialect.Quote(m.TempUserTable) + ` as tu
+									LEFT OUTER JOIN ` + dialect.Quote(m.UserTable) + ` as u on u.id = tu.invited_by_user_id
 									WHERE tu.status=?`
 	params := []interface{}{string(query.Status)}
 
@@ -102,8 +102,8 @@ func GetTempUserByCode(query *m.GetTempUserByCodeQuery) error {
 									u.login						as invited_by_login,
 									u.name						as invited_by_name,
 									u.email						as invited_by_email
-	                FROM ` + dialect.Quote("temp_user") + ` as tu
-									LEFT OUTER JOIN ` + dialect.Quote("user") + ` as u on u.id = tu.invited_by_user_id
+	                FROM ` + dialect.Quote(m.TempUserTable) + ` as tu
+									LEFT OUTER JOIN ` + dialect.Quote(m.UserTable) + ` as u on u.id = tu.invited_by_user_id
 	                WHERE tu.code=?`
 
 	var tempUser m.TempUserDTO

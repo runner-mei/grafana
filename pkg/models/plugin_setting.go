@@ -25,6 +25,12 @@ type PluginSetting struct {
 	Updated time.Time
 }
 
+const PluginSettingTable = "tpt_dh_plugin_setting"
+
+func (a *PluginSetting) TableName() string {
+	return PluginSettingTable
+}
+
 type SecureJsonData map[string][]byte
 
 func (s SecureJsonData) Decrypt() map[string]string {

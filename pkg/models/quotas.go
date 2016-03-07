@@ -2,8 +2,9 @@ package models
 
 import (
 	"errors"
-	"github.com/grafana/grafana/pkg/setting"
 	"time"
+
+	"github.com/grafana/grafana/pkg/setting"
 )
 
 var ErrInvalidQuotaTarget = errors.New("Invalid quota target")
@@ -18,10 +19,22 @@ type Quota struct {
 	Updated time.Time
 }
 
+const QuotaTable = "tpt_dh_quota"
+
+func (a *Quota) TableName() string {
+	return QuotaTable
+}
+
 type QuotaScope struct {
 	Name         string
 	Target       string
 	DefaultLimit int64
+}
+
+const QuotaScopeTable = "tpt_dh_quota_scope"
+
+func (a *QuotaScope) TableName() string {
+	return QuotaScopeTable
 }
 
 type OrgQuotaDTO struct {

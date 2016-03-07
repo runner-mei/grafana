@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addApiKeyMigrations(mg *Migrator) {
 	apiKeyV1 := Table{
-		Name: "api_key",
+		Name: "tpt_dh_api_key",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "account_id", Type: DB_BigInt, Nullable: false},
@@ -34,10 +34,10 @@ func addApiKeyMigrations(mg *Migrator) {
 	// drop indexes
 	addDropAllIndicesMigrations(mg, "v1", apiKeyV1)
 	// rename table
-	addTableRenameMigration(mg, "api_key", "api_key_v1", "v1")
+	addTableRenameMigration(mg, "tpt_dh_api_key", "tpt_dh_api_key_v1", "v1")
 
 	apiKeyV2 := Table{
-		Name: "api_key",
+		Name: "tpt_dh_api_key",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt, Nullable: false},
@@ -61,7 +61,7 @@ func addApiKeyMigrations(mg *Migrator) {
 	addTableIndicesMigrations(mg, "v2", apiKeyV2)
 
 	//------- copy data from v1 to v2 -------------------
-	mg.AddMigration("copy api_key v1 to v2", NewCopyTableDataMigration("api_key", "api_key_v1", map[string]string{
+	mg.AddMigration("copy api_key v1 to v2", NewCopyTableDataMigration("tpt_dh_api_key", "tpt_dh_api_key_v1", map[string]string{
 		"id":      "id",
 		"org_id":  "account_id",
 		"name":    "name",
@@ -71,5 +71,5 @@ func addApiKeyMigrations(mg *Migrator) {
 		"updated": "updated",
 	}))
 
-	mg.AddMigration("Drop old table api_key_v1", NewDropTableMigration("api_key_v1"))
+	mg.AddMigration("Drop old table api_key_v1", NewDropTableMigration("tpt_dh_api_key_v1"))
 }

@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addSessionMigration(mg *Migrator) {
 	var sessionV1 = Table{
-		Name: "session",
+		Name: "tpt_dh_session",
 		Columns: []*Column{
 			{Name: "key", Type: DB_Char, IsPrimaryKey: true, Length: 16},
 			{Name: "data", Type: DB_Blob},

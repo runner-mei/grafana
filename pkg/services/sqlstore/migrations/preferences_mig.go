@@ -5,7 +5,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 func addPreferencesMigrations(mg *Migrator) {
 
 	preferencesV1 := Table{
-		Name: "preferences",
+		Name: "tpt_dh_preferences",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "pref_id", Type: DB_Int, Nullable: false},

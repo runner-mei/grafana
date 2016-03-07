@@ -47,7 +47,7 @@ func GetDataSources(query *m.GetDataSourcesQuery) error {
 
 func DeleteDataSource(cmd *m.DeleteDataSourceCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "DELETE FROM data_source WHERE id=? and org_id=?"
+		var rawSql = "DELETE FROM " + m.DataSourceTable + " WHERE id=? and org_id=?"
 		_, err := sess.Exec(rawSql, cmd.Id, cmd.OrgId)
 		return err
 	})
@@ -89,7 +89,7 @@ func AddDataSource(cmd *m.AddDataSourceCommand) error {
 func updateIsDefaultFlag(ds *m.DataSource, sess *xorm.Session) error {
 	// Handle is default flag
 	if ds.IsDefault {
-		rawSql := "UPDATE data_source SET is_default=? WHERE org_id=? AND id <> ?"
+		rawSql := "UPDATE " + m.DataSourceTable + " SET is_default=? WHERE org_id=? AND id <> ?"
 		if _, err := sess.Exec(rawSql, false, ds.OrgId, ds.Id); err != nil {
 			return err
 		}

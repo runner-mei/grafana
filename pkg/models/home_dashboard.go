@@ -12,3 +12,9 @@ type HomeDashboard struct {
 
 	Data map[string]interface{}
 }
+
+const HomeDashboardTable = "tpt_dh_home_dashboard"
+
+func (a *HomeDashboard) TableName() string {
+	return HomeDashboardTable
+}

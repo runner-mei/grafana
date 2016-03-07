@@ -25,7 +25,7 @@ func GetApiKeys(query *m.GetApiKeysQuery) error {
 
 func DeleteApiKey(cmd *m.DeleteApiKeyCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "DELETE FROM api_key WHERE id=? and org_id=?"
+		var rawSql = "DELETE FROM " + m.ApiKeyTable + " WHERE id=? and org_id=?"
 		_, err := sess.Exec(rawSql, cmd.Id, cmd.OrgId)
 		return err
 	})

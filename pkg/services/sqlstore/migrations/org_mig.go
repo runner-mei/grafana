@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addOrgMigrations(mg *Migrator) {
 	orgV1 := Table{
-		Name: "org",
+		Name: "tpt_dh_org",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "version", Type: DB_Int, Nullable: false},
@@ -29,7 +29,7 @@ func addOrgMigrations(mg *Migrator) {
 	addTableIndicesMigrations(mg, "v1", orgV1)
 
 	orgUserV1 := Table{
-		Name: "org_user",
+		Name: "tpt_dh_org_user",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt},
@@ -49,23 +49,23 @@ func addOrgMigrations(mg *Migrator) {
 	addTableIndicesMigrations(mg, "v1", orgUserV1)
 
 	//-------  copy data from old table-------------------
-	mg.AddMigration("copy data account to org", NewCopyTableDataMigration("org", "account", map[string]string{
+	mg.AddMigration("copy data account to org", NewCopyTableDataMigration("tpt_dh_org", "tpt_dh_account", map[string]string{
 		"id":      "id",
 		"version": "version",
 		"name":    "name",
 		"created": "created",
 		"updated": "updated",
-	}).IfTableExists("account"))
+	}).IfTableExists("tpt_dh_account"))
 
-	mg.AddMigration("copy data account_user to org_user", NewCopyTableDataMigration("org_user", "account_user", map[string]string{
+	mg.AddMigration("copy data account_user to org_user", NewCopyTableDataMigration("tpt_dh_org_user", "tpt_dh_account_user", map[string]string{
 		"id":      "id",
 		"org_id":  "account_id",
 		"user_id": "user_id",
 		"role":    "role",
 		"created": "created",
 		"updated": "updated",
-	}).IfTableExists("account_user"))
+	}).IfTableExists("tpt_dh_account_user"))
 
-	mg.AddMigration("Drop old table account", NewDropTableMigration("account"))
-	mg.AddMigration("Drop old table account_user", NewDropTableMigration("account_user"))
+	mg.AddMigration("Drop old table account", NewDropTableMigration("tpt_dh_account"))
+	mg.AddMigration("Drop old table account_user", NewDropTableMigration("tpt_dh_account_user"))
 }

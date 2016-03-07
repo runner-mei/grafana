@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addDashboardMigration(mg *Migrator) {
 	var dashboardV1 = Table{
-		Name: "dashboard",
+		Name: "tpt_dh_dashboard",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "version", Type: DB_Int, Nullable: false},
@@ -28,7 +28,7 @@ func addDashboardMigration(mg *Migrator) {
 	mg.AddMigration("add unique index dashboard_account_id_slug", NewAddIndexMigration(dashboardV1, dashboardV1.Indices[1]))
 
 	dashboardTagV1 := Table{
-		Name: "dashboard_tag",
+		Name: "tpt_dh_dashboard_tag",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "dashboard_id", Type: DB_BigInt, Nullable: false},
@@ -48,11 +48,11 @@ func addDashboardMigration(mg *Migrator) {
 	//-------  drop dashboard indexes ------------------
 	addDropAllIndicesMigrations(mg, "v1", dashboardTagV1)
 	//------- rename table ------------------
-	addTableRenameMigration(mg, "dashboard", "dashboard_v1", "v1")
+	addTableRenameMigration(mg, "tpt_dh_dashboard", "tpt_dh_dashboard_v1", "v1")
 
 	// dashboard v2
 	var dashboardV2 = Table{
-		Name: "dashboard",
+		Name: "tpt_dh_dashboard",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "version", Type: DB_Int, Nullable: false},
@@ -74,7 +74,7 @@ func addDashboardMigration(mg *Migrator) {
 	// recreate indices
 	addTableIndicesMigrations(mg, "v2", dashboardV2)
 	// copy data
-	mg.AddMigration("copy dashboard v1 to v2", NewCopyTableDataMigration("dashboard", "dashboard_v1", map[string]string{
+	mg.AddMigration("copy dashboard v1 to v2", NewCopyTableDataMigration("tpt_dh_dashboard", "tpt_dh_dashboard_v1", map[string]string{
 		"id":      "id",
 		"version": "version",
 		"slug":    "slug",
@@ -85,13 +85,13 @@ func addDashboardMigration(mg *Migrator) {
 		"updated": "updated",
 	}))
 
-	mg.AddMigration("drop table dashboard_v1", NewDropTableMigration("dashboard_v1"))
+	mg.AddMigration("drop table dashboard_v1", NewDropTableMigration("tpt_dh_dashboard_v1"))
 
 	// change column type of dashboard.data
 	mg.AddMigration("alter dashboard.data to mediumtext v1", new(RawSqlMigration).
 		Sqlite("SELECT 0 WHERE 0;").
 		Postgres("SELECT 0;").
-		Mysql("ALTER TABLE dashboard MODIFY data MEDIUMTEXT;"))
+		Mysql("ALTER TABLE tpt_dh_dashboard MODIFY data MEDIUMTEXT;"))
 
 	// add column to store updater of a dashboard
 	mg.AddMigration("Add column updated_by in dashboard - v2", NewAddColumnMigration(dashboardV2, &Column{

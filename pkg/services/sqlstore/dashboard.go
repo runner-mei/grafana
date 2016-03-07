@@ -78,7 +78,7 @@ func SaveDashboard(cmd *m.SaveDashboardCommand) error {
 		}
 
 		// delete existing tabs
-		_, err = sess.Exec("DELETE FROM dashboard_tag WHERE dashboard_id=?", dash.Id)
+		_, err = sess.Exec("DELETE FROM "+DashboardTagTable+" WHERE dashboard_id=?", dash.Id)
 		if err != nil {
 			return err
 		}
@@ -130,11 +130,11 @@ func SearchDashboards(query *search.FindPersistedDashboardsQuery) error {
 					  dashboard.title,
 					  dashboard.slug,
 					  dashboard_tag.term
-					FROM dashboard
-					LEFT OUTER JOIN dashboard_tag on dashboard_tag.dashboard_id = dashboard.id`)
+					FROM ` + m.DashboardTable + ` as dashboard
+					LEFT OUTER JOIN ` + DashboardTagTable + ` as dashboard_tag on dashboard_tag.dashboard_id = dashboard.id`)
 
 	if query.IsStarred {
-		sql.WriteString(" INNER JOIN star on star.dashboard_id = dashboard.id")
+		sql.WriteString(" INNER JOIN " + m.StarTable + " as star on star.dashboard_id = dashboard.id")
 	}
 
 	sql.WriteString(` WHERE dashboard.org_id=?`)
@@ -200,8 +200,8 @@ func GetDashboardTags(query *m.GetDashboardTagsQuery) error {
 	sql := `SELECT
 					  COUNT(*) as count,
 						term
-					FROM dashboard
-					INNER JOIN dashboard_tag on dashboard_tag.dashboard_id = dashboard.id
+					FROM ` + m.DashboardTable + ` as dashboard
+					INNER JOIN ` + DashboardTagTable + ` as dashboard_tag on dashboard_tag.dashboard_id = dashboard.id
 					WHERE dashboard.org_id=?
 					GROUP BY term`
 
@@ -222,9 +222,9 @@ func DeleteDashboard(cmd *m.DeleteDashboardCommand) error {
 		}
 
 		deletes := []string{
-			"DELETE FROM dashboard_tag WHERE dashboard_id = ? ",
-			"DELETE FROM star WHERE dashboard_id = ? ",
-			"DELETE FROM dashboard WHERE id = ?",
+			"DELETE FROM " + DashboardTagTable + " WHERE dashboard_id = ? ",
+			"DELETE FROM " + m.StarTable + " WHERE dashboard_id = ? ",
+			"DELETE FROM " + m.DashboardTable + " WHERE id = ?",
 		}
 
 		for _, sql := range deletes {

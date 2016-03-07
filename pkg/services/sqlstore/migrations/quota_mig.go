@@ -7,7 +7,7 @@ import (
 func addQuotaMigration(mg *Migrator) {
 
 	var quotaV1 = Table{
-		Name: "quota",
+		Name: "tpt_dh_quota",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt, Nullable: true},

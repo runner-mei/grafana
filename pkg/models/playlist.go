@@ -18,6 +18,12 @@ type Playlist struct {
 	OrgId    int64  `json:"-"`
 }
 
+const PlaylistTable = "tpt_dh_playlist"
+
+func (a *Playlist) TableName() string {
+	return PlaylistTable
+}
+
 type PlaylistDTO struct {
 	Id       int64             `json:"id"`
 	Name     string            `json:"name"`
@@ -41,6 +47,16 @@ type PlaylistDashboard struct {
 	Title string `json:"title"`
 }
 
+const PlaylistDashboardTable = "tpt_dh_dashboard"
+
+func (a *PlaylistDashboard) TableName() string {
+	return PlaylistDashboardTable
+}
+
+// func (this PlaylistDashboard) TableName() string {
+// 	return PlaylistDashboardTable
+// }
+
 type PlaylistItem struct {
 	Id         int64
 	PlaylistId int64
@@ -50,9 +66,15 @@ type PlaylistItem struct {
 	Title      string
 }
 
-func (this PlaylistDashboard) TableName() string {
-	return "dashboard"
+const PlaylistItemTable = "tpt_dh_playlist_item"
+
+func (this *PlaylistItem) TableName() string {
+	return PlaylistItemTable
 }
+
+// func (this PlaylistItem) TableName() string {
+// 	return PlaylistItemTable
+// }
 
 type Playlists []*Playlist
 type PlaylistDashboards []*PlaylistDashboard

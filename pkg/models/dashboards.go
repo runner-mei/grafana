@@ -40,6 +40,12 @@ type Dashboard struct {
 	Data  map[string]interface{}
 }
 
+const DashboardTable = "tpt_dh_dashboard"
+
+func (a *Dashboard) TableName() string {
+	return DashboardTable
+}
+
 // NewDashboard creates a new dashboard
 func NewDashboard(title string) *Dashboard {
 	dash := &Dashboard{}

@@ -39,6 +39,12 @@ type TempUser struct {
 	Updated time.Time
 }
 
+const TempUserTable = "tpt_dh_temp_user"
+
+func (a *TempUser) TableName() string {
+	return TempUserTable
+}
+
 // ---------------------
 // COMMANDS
 

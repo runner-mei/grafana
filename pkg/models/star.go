@@ -10,6 +10,12 @@ type Star struct {
 	DashboardId int64
 }
 
+const StarTable = "tpt_dh_star"
+
+func (a *Star) TableName() string {
+	return StarTable
+}
+
 // ----------------------
 // COMMANDS
 

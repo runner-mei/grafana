@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addTempUserMigrations(mg *Migrator) {
 	tempUserV1 := Table{
-		Name: "temp_user",
+		Name: "tpt_dh_temp_user",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt, Nullable: false},

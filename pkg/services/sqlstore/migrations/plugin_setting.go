@@ -5,7 +5,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 func addAppSettingsMigration(mg *Migrator) {
 
 	pluginSettingTable := Table{
-		Name: "plugin_setting",
+		Name: "tpt_dh_plugin_setting",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "org_id", Type: DB_BigInt, Nullable: true},

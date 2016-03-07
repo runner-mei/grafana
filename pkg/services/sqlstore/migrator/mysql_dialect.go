@@ -73,7 +73,7 @@ func (db *Mysql) SqlType(c *Column) string {
 }
 
 func (db *Mysql) TableCheckSql(tableName string) (string, []interface{}) {
-	args := []interface{}{"grafana", tableName}
+	args := []interface{}{"public", tableName}
 	sql := "SELECT `TABLE_NAME` from `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA`=? and `TABLE_NAME`=?"
 	return sql, args
 }

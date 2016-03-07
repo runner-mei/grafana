@@ -4,7 +4,7 @@ import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 
 func addUserMigrations(mg *Migrator) {
 	userV1 := Table{
-		Name: "user",
+		Name: "tpt_dh_user",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "version", Type: DB_Int, Nullable: false},
@@ -39,11 +39,11 @@ func addUserMigrations(mg *Migrator) {
 	addDropAllIndicesMigrations(mg, "v1", userV1)
 
 	//------- rename table ------------------
-	addTableRenameMigration(mg, "user", "user_v1", "v1")
+	addTableRenameMigration(mg, "tpt_dh_user", "tpt_dh_user_v1", "v1")
 
 	//------- recreate table with new column names ------------------
 	userV2 := Table{
-		Name: "user",
+		Name: "tpt_dh_user",
 		Columns: []*Column{
 			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
 			{Name: "version", Type: DB_Int, Nullable: false},
@@ -71,7 +71,7 @@ func addUserMigrations(mg *Migrator) {
 	addTableIndicesMigrations(mg, "v2", userV2)
 
 	//------- copy data from v1 to v2 -------------------
-	mg.AddMigration("copy data_source v1 to v2", NewCopyTableDataMigration("user", "user_v1", map[string]string{
+	mg.AddMigration("copy data_source v1 to v2", NewCopyTableDataMigration("tpt_dh_user", "tpt_dh_user_v1", map[string]string{
 		"id":       "id",
 		"version":  "version",
 		"login":    "login",
@@ -87,5 +87,5 @@ func addUserMigrations(mg *Migrator) {
 		"updated":  "updated",
 	}))
 
-	mg.AddMigration("Drop old table user_v1", NewDropTableMigration("user_v1"))
+	mg.AddMigration("Drop old table user_v1", NewDropTableMigration("tpt_dh_user_v1"))
 }

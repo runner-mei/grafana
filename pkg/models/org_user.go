@@ -46,6 +46,12 @@ type OrgUser struct {
 	Updated time.Time
 }
 
+const OrgUserTable = "tpt_dh_org_user"
+
+func (a *OrgUser) TableName() string {
+	return OrgUserTable
+}
+
 // ---------------------
 // COMMANDS
 

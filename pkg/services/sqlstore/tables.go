@@ -7,3 +7,9 @@ type DashboardTag struct {
 	DashboardId int64
 	Term        string
 }
+
+const DashboardTagTable = "tpt_dh_star"
+
+func (a *DashboardTag) TableName() string {
+	return DashboardTagTable
+}

@@ -15,7 +15,7 @@ func init() {
 }
 
 func IsStarredByUser(query *m.IsStarredByUserQuery) error {
-	rawSql := "SELECT 1 from star where user_id=? and dashboard_id=?"
+	rawSql := "SELECT 1 from " + m.StarTable + " where user_id=? and dashboard_id=?"
 	results, err := x.Query(rawSql, query.UserId, query.DashboardId)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func UnstarDashboard(cmd *m.UnstarDashboardCommand) error {
 	}
 
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "DELETE FROM star WHERE user_id=? and dashboard_id=?"
+		var rawSql = "DELETE FROM " + m.StarTable + " WHERE user_id=? and dashboard_id=?"
 		_, err := sess.Exec(rawSql, cmd.UserId, cmd.DashboardId)
 		return err
 	})

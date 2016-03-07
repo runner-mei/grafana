@@ -12,7 +12,7 @@ func init() {
 }
 
 func GetDataSourceStats(query *m.GetDataSourceStatsQuery) error {
-	var rawSql = `SELECT COUNT(*) as count, type FROM data_source GROUP BY type`
+	var rawSql = `SELECT COUNT(*) as count, type FROM ` + m.DataSourceTable + `data_source GROUP BY type`
 	query.Result = make([]*m.DataSourceStats, 0)
 	err := x.Sql(rawSql).Find(&query.Result)
 	if err != nil {
@@ -26,19 +26,19 @@ func GetSystemStats(query *m.GetSystemStatsQuery) error {
 	var rawSql = `SELECT
 			(
 				SELECT COUNT(*)
-        FROM ` + dialect.Quote("user") + `
+        FROM ` + dialect.Quote(m.UserTable) + `
       ) AS user_count,
 			(
 				SELECT COUNT(*)
-        FROM ` + dialect.Quote("org") + `
+        FROM ` + dialect.Quote(m.OrgTable) + `
       ) AS org_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("dashboard") + `
+        FROM ` + dialect.Quote(m.DashboardTable) + `
       ) AS dashboard_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("playlist") + `
+        FROM ` + dialect.Quote(m.PlaylistTable) + `
       ) AS playlist_count
 			`
 
@@ -56,39 +56,39 @@ func GetAdminStats(query *m.GetAdminStatsQuery) error {
 	var rawSql = `SELECT
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("user") + `
+        FROM ` + dialect.Quote(m.UserTable) + `
       ) AS user_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("org") + `
+        FROM ` + dialect.Quote(m.OrgTable) + `
       ) AS org_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("dashboard") + `
+        FROM ` + dialect.Quote(m.DashboardTable) + `
       ) AS dashboard_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("dashboard_snapshot") + `
+        FROM ` + dialect.Quote(m.DashboardSnapshotTable) + `
       ) AS db_snapshot_count,
       (
         SELECT COUNT( DISTINCT ( ` + dialect.Quote("term") + ` ))
-        FROM ` + dialect.Quote("dashboard_tag") + `
+        FROM ` + dialect.Quote(DashboardTagTable) + `
       ) AS db_tag_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("data_source") + `
+        FROM ` + dialect.Quote(m.DataSourceTable) + `
       ) AS data_source_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("playlist") + `
+        FROM ` + dialect.Quote(m.PlaylistTable) + `
       ) AS playlist_count,
       (
         SELECT COUNT(DISTINCT ` + dialect.Quote("dashboard_id") + ` )
-        FROM ` + dialect.Quote("star") + `
+        FROM ` + dialect.Quote(m.StarTable) + `
       ) AS starred_db_count,
       (
         SELECT COUNT(*)
-        FROM ` + dialect.Quote("user") + `
+        FROM ` + dialect.Quote(m.UserTable) + `
         WHERE ` + dialect.Quote("is_admin") + ` = 1
       ) AS grafana_admin_count
       `

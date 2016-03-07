@@ -48,6 +48,12 @@ type DataSource struct {
 	Updated time.Time
 }
 
+const DataSourceTable = "tpt_dh_data_source"
+
+func (a *DataSource) TableName() string {
+	return DataSourceTable
+}
+
 var knownDatasourcePlugins map[string]bool = map[string]bool{
 	DS_ES:          true,
 	DS_GRAPHITE:    true,

@@ -20,7 +20,7 @@ func init() {
 
 func SearchOrgs(query *m.SearchOrgsQuery) error {
 	query.Result = make([]*m.OrgDTO, 0)
-	sess := x.Table("org")
+	sess := x.Table(m.OrgTable)
 	if query.Query != "" {
 		sess.Where("name LIKE ?", query.Query+"%")
 	}
@@ -178,14 +178,14 @@ func DeleteOrg(cmd *m.DeleteOrgCommand) error {
 	return inTransaction2(func(sess *session) error {
 
 		deletes := []string{
-			"DELETE FROM star WHERE EXISTS (SELECT 1 FROM dashboard WHERE org_id = ? AND star.dashboard_id = dashboard.id)",
-			"DELETE FROM dashboard_tag WHERE EXISTS (SELECT 1 FROM dashboard WHERE org_id = ? AND dashboard_tag.dashboard_id = dashboard.id)",
-			"DELETE FROM dashboard WHERE org_id = ?",
-			"DELETE FROM api_key WHERE org_id = ?",
-			"DELETE FROM data_source WHERE org_id = ?",
-			"DELETE FROM org_user WHERE org_id = ?",
-			"DELETE FROM org WHERE id = ?",
-			"DELETE FROM temp_user WHERE org_id = ?",
+			"DELETE FROM " + m.StarTable + " WHERE EXISTS (SELECT 1 FROM " + m.DashboardTable + " WHERE org_id = ? AND " + m.StarTable + ".dashboard_id = " + m.DashboardTable + ".id)",
+			"DELETE FROM " + DashboardTagTable + " WHERE EXISTS (SELECT 1 FROM " + m.DashboardTable + " WHERE org_id = ? AND " + DashboardTagTable + ".dashboard_id = " + m.DashboardTable + ".id)",
+			"DELETE FROM " + m.DashboardTable + " WHERE org_id = ?",
+			"DELETE FROM " + m.ApiKeyTable + " WHERE org_id = ?",
+			"DELETE FROM " + m.DataSourceTable + " WHERE org_id = ?",
+			"DELETE FROM " + m.OrgUserTable + " WHERE org_id = ?",
+			"DELETE FROM " + m.OrgTable + " WHERE id = ?",
+			"DELETE FROM " + m.TempUserTable + " WHERE org_id = ?",
 		}
 
 		for _, sql := range deletes {

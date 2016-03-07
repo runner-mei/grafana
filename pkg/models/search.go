@@ -8,3 +8,9 @@ type SearchHit struct {
 	Tags      []string `json:"tags"`
 	IsStarred bool     `json:"isStarred"`
 }
+
+const SearchHitTable = "tpt_dh_search_hit"
+
+func (a *SearchHit) TableName() string {
+	return SearchHitTable
+}

@@ -7,9 +7,21 @@ type SystemStats struct {
 	PlaylistCount  int
 }
 
+const SystemStatsTable = "tpt_dh_system_stats"
+
+func (a *SystemStats) TableName() string {
+	return SystemStatsTable
+}
+
 type DataSourceStats struct {
 	Count int
 	Type  string
+}
+
+const DataSourceStatsTable = "tpt_dh_data_source_stats"
+
+func (a *DataSourceStats) TableName() string {
+	return DataSourceStatsTable
 }
 
 type GetSystemStatsQuery struct {

@@ -46,7 +46,7 @@ func CreateDashboardSnapshot(cmd *m.CreateDashboardSnapshotCommand) error {
 
 func DeleteDashboardSnapshot(cmd *m.DeleteDashboardSnapshotCommand) error {
 	return inTransaction(func(sess *xorm.Session) error {
-		var rawSql = "DELETE FROM dashboard_snapshot WHERE delete_key=?"
+		var rawSql = "DELETE FROM " + m.DashboardSnapshotTable + " WHERE delete_key=?"
 		_, err := sess.Exec(rawSql, cmd.DeleteKey)
 		return err
 	})
